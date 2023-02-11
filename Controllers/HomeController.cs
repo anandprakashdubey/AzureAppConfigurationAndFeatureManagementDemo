@@ -1,5 +1,6 @@
 ﻿using AzureAppConfigurationAndFeatureManagementDemo.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.FeatureManagement;
 using System.Diagnostics;
 
 namespace AzureAppConfigurationAndFeatureManagementDemo.Controllers
@@ -8,15 +9,23 @@ namespace AzureAppConfigurationAndFeatureManagementDemo.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IConfiguration _configuration;
+        private readonly IFeatureManager _feature;
 
-        public HomeController(ILogger<HomeController> logger, IConfiguration configuration)
+        public HomeController(ILogger<HomeController> logger
+            , IConfiguration configuration
+            , IFeatureManager feature)
         {
             _logger = logger;
             _configuration = configuration;
+            _feature = feature;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            ViewBag.IsFeatureEnable = await _feature.IsEnabledAsync("beta")
+                ? true
+                : false; 
+            
             ViewData["AzureAppConfigValue"] = _configuration["AzureAppConfigurationKey"].ToString();
             return View();
         }

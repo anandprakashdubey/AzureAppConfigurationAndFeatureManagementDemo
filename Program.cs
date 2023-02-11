@@ -1,3 +1,5 @@
+using Microsoft.FeatureManagement;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -7,8 +9,13 @@ var azureappconfigurationconnectionstring = "Endpoint=https://vmappconfigdemo.az
 
 builder.Host.ConfigureAppConfiguration(app =>
 {
-    app.AddAzureAppConfiguration(azureappconfigurationconnectionstring);
+    app.AddAzureAppConfiguration(option =>
+    {
+        option.Connect(azureappconfigurationconnectionstring).UseFeatureFlags();
+    });
 });
+
+builder.Services.AddFeatureManagement();
 
 
 var app = builder.Build();

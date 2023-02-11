@@ -6,3 +6,11 @@
     <h1 class="display-4">Welcome</h1>
     <p>@ViewData["AzureAppConfigValue"]</p>
 </div>
+
+@if (ViewBag.IsFeatureEnable)
+{
+    <div class="text-center">
+        <h1 class="display-4">This is Beta Feature</h1>
+    </div>
+}
+
